@@ -44,9 +44,13 @@ class ProxyHandler(JsonHandler, GithubMixin2):
 
     async def get(self):
         code = self.get_argument('code', None)
+        client_id = self.get_argument('client_id', None)
+        if not client_id or client_id not in options.d_auth:
+            self.write({'error': 'wrong client_id'})
+            return
         params = {
-            'client_id': options.client_id,
-            'client_secret': options.client_secret,
+            'client_id': client_id,
+            'client_secret': options.d_auth[client_id],
             'code': code,
             # TODO: add state as param
         }

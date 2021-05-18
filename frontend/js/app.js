@@ -1,5 +1,6 @@
 API_BASE = 'http://154.204.26.102:8888';
-CLIENT_ID = 'a2e6fe401c05747a0f68';
+CLIENT_ID = 'b597886a5fe361255e03';
+
 document.addEventListener("DOMContentLoaded", pagePrepare);
 document.getElementById("submit_metadata").addEventListener("click", submitMetadata);
 document.getElementById("add_metadata").addEventListener("click", toggleAddMetadata);
