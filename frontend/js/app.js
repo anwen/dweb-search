@@ -133,6 +133,7 @@ function submitMetadata() {
 
 function submitSearch() {
   document.getElementById("add_metadata_form").style.display = "none";
+  document.getElementById("results").style.display = "block";
   var question = document.getElementById("question").value;
   getSearchResults(question);
 }
@@ -238,7 +239,7 @@ function getSearchResults(question) {
         }
         // dataset_filecoin_info
         dataset_info = '';
-        if (r.data_cid!=null) {
+        if (r.data_cid!=null && r.data_cid!="") {
           dataset_info += ' Filetype: ' + r.filetype;
           dataset_info += ' dataCid: ' + r.data_cid;
           dataset_info += ' MinerIDs: ' + r.miner_ids.join(', ');
