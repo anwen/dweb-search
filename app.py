@@ -1,0 +1,115 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import codecs
+import json
+import tornado.ioloop
+import tornado.web
+import tornado.auth
+import tornado.escape
+import tornado.log
+from tornado.web import RequestHandler
+from motorengine import connect
+from auth import GithubMixin2
+import db
+import options
+from log import logger
+import argparse
+
+parser = argparse.ArgumentParser(
+    description='Welcome to Dweb World')
+parser.add_argument(
+    '-p', '--port',
+    dest='port',
+    action='store',
+    type=int,
+    default=options.port,
+    help='run on the given port'
+)
+args = parser.parse_args()
+
+
+class JsonHandler(RequestHandler):
+
+    def set_default_headers(self):
+        self.set_header('Content-Type', 'application/json')
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Headers', '*')
+        self.set_header('Access-Control-Allow-Methods', '*')
+
+    def options(self):
+        pass
+
+
+class ProxyHandler(JsonHandler, GithubMixin2):
+
+    async def get(self):
+        code = self.get_argument('code', None)
+        params = {
+            'client_id': options.client_id,
+            'client_secret': options.client_secret,
+            'code': code,
+            # TODO: add state as param
+        }
+        ret = await self.get_authenticated_user(**params)
+        ret = codecs.decode(ret, 'ascii')
+        ret = json.loads(ret)
+        self.write(ret)
+
+
+class ShareHandler(JsonHandler):
+    async def post(self):
+        token = self.request.headers['Authorization'][6:]
+        d = tornado.escape.json_decode(self.request.body)
+        if 'tags' in d and isinstance(d['tags'], str):
+            d['tags'] = [tag.strip() for tag in d['tags'].strip().split(',')]
+        if 'miner_ids' in d:
+            miner_ids = d['miner_ids'].strip().split(',')
+            d['miner_ids'] = [i.strip() for i in miner_ids if i.strip()]
+        share = await db.add_share(d, token)
+        if hasattr(share, '_values'):
+            ret = {'data': share._values}
+        else:
+            ret = {'error': str(share)}
+        self.write(ret)
+
+
+class SearchHandler(JsonHandler):
+    async def get(self):
+        question = self.get_argument("question", '')
+        ret = {}
+        ret['version'] = 'https://jsonfeed.org/version/1'
+        ret['title'] = 'Search Results of: {}'.format(question)
+        if question:
+            ret['items'] = await db.search_shares(question)
+        else:
+            ret['error'] = 'no question'
+        print(ret)
+        self.write(ret)
+
+
+class SharesHandler(JsonHandler):
+    async def get(self):
+        shares = await db.get_shares()
+        l_shares = []
+        for share in shares:
+            l_shares.append(dict(share._values))
+        ret = {'data': l_shares}
+        self.write(ret)
+
+
+def make_app():
+    return tornado.web.Application([
+        (r"/proxy", ProxyHandler),
+        (r"/share", ShareHandler),
+        (r"/shares", SharesHandler),
+        (r"/search", SearchHandler),
+    ])
+
+
+if __name__ == "__main__":
+    app = make_app()
+    app.listen(args.port)
+    logger.info('Server started on %s' % args.port)
+    io_loop = tornado.ioloop.IOLoop.instance()
+    connect("test2", host="localhost", port=27017, io_loop=io_loop)
+    io_loop.start()

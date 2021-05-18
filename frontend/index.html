@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dweb Search">
+  <meta name="author" content="askender">
+  <title>Dweb Search - A decentralized Search Engine for IPFS and Filecoin</title>
+  <link rel="canonical" href="">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/search.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Dweb Search</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#docs">Docs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Airdrop</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="bg-light p-5 rounded">
+      <h1 class="text-center">Dweb Search</h1>
+
+      <div class="d-flex col-md-8 m-auto">
+        <input id="question" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button id="submit_search" class="btn btn-outline-success" type="submit">Search</button>
+        <a id="github_auth"
+          href="https://github.com/login/oauth/authorize?redirect_uri=http://154.204.26.102:8000&client_id=a2e6fe401c05747a0f68&response_type=code"
+          type="button" class="btn btn-outline-success" id="github_auth">Login</a>
+        <button id="add_metadata" class="btn btn-outline-success" type="submit" style="display: none">➕Metadata</button>
+      </div>
+
+      <div class="lead col-md-8 m-auto">
+        <p>A decentralized Search Engine for IPFS and Filecoin.</p>
+      </div>
+
+      <div id="results"></div>
+
+      <div id="add_metadata_form" style="display: none">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" class="form-control" id="title" placeholder="Title" required>
+          <small id="titleHelp" class="form-text text-muted"></small>
+        </div>
+        <div class="form-group">
+          <label for="cid">Content ID (a url startswith ipfs:// or ipns://)</label>
+          <input type="text" class="form-control" id="cid" placeholder="url startswith ipfs:// or ipns://" required>
+          <small id="" class="form-text text-muted"></small>
+        </div>
+        <div class="form-group">
+          <label for="license">License <a href="https://creativecommons.org/choose/" target="_blank">Choose a Licence</a> </label>
+          <select class="form-control" id="license" required>
+            <option>CC0</option>
+            <option>CC-BY</option>
+            <option selected>CC-BY-SA</option>
+            <option>CC-BY-NC</option>
+            <option>CC-BY-NC-SA</option>
+            <option>CC-BY-ND</option>
+            <option>CC-BY-NC-ND</option>
+            <option>CC-BY-MustPay</option>
+          </select>
+          <small id="" class="form-text text-muted"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="filetype">Filetype</label>
+          <input type="text" class="form-control" id="filetype" placeholder="filetype" value="html" required>
+          <small id="" class="form-text text-muted"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="tags">Tags (seperate with "," )</label>
+          <input type="text" class="form-control" id="tags" placeholder="tags" required>
+          <small id="" class="form-text text-muted"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="url">URL (optional, startswith http:// or http://)</label>
+          <input type="text" class="form-control" id="url" placeholder="url" required>
+          <small id="" class="form-text text-muted"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="summary">Summary (optional)</label>
+          <input type="text" class="form-control" id="summary" placeholder="summary">
+          <small id="" class="form-text text-muted"></small>
+        </div>
+        <!-- we support content_text content_html too -->
+
+        <div class="form-group">
+          <label class="form-check-label" for="author_name">Author Name (optional if you are the author)</label>
+          <input type="text" class="form-control" id="author_name" placeholder="Author Name">
+        </div>
+        <div class="form-group">
+          <label class="form-check-label" for="author_url">Author URL (optional, blog etc.)</label>
+          <input type="text" class="form-control" id="author_url" placeholder="Author URL">
+        </div>
+        <div class="form-group">
+          <label class="form-check-label" for="author_wallet">Author Wallets (optional, seperate with ";"), Example: likeid:askender;filecoin:f1yerglsxmiocu2pdfmvfn5sz2syk5ppetixqkmdq</label>
+          <input type="text" class="form-control" id="author_wallet" placeholder="">
+        </div>
+
+        <div class="form-group">
+          <label for="data_cid">Data CID (optional) Format as "ba..."</label>
+          <input type="text" class="form-control" id="data_cid" placeholder="data_cid">
+          <small id="" class="form-text text-muted"></small>
+        </div>
+        <div class="form-group">
+          <label for="miner_ids">Miner IDs (optional, seperate with ",")</label>
+          <input type="text" class="form-control" id="miner_ids" placeholder="miner_ids">
+          <small id="" class="form-text text-muted"></small>
+        </div>
+
+        <pre>
+          ## You can also use API to add metadata, for example:
+          curl --header "Authorization: token gho_get_it_from_cookie" \
+            --request POST \
+            --data '{"title":"title","id":"ipfs://baxxx","url":"","license":"CC-BY-SA","filetype":"html","tags":"","summary":"","authors":[{"wallet":{"likeid":"askender","filecoin":"f1yerglsxmiocu2pdfmvfn5sz2syk5ppetixqkmdq"}}],"data_cid":"","miner_ids":""}' \
+            http://154.204.26.102:8887/share
+        </pre>
+
+        <button id="submit_metadata" type="submit" class="btn btn-primary">Submit</button>
+      </div>
+
+
+      <div class="lead col-md-8 m-auto">
+        <h6>Features</h6>
+        <ol>
+          <li>1350000+ permalinks&datasets are indexed and more is on the way, including Wikipedia, Kaggle datasets, TED, Arxiv, blogs, Matters(an ipfs-blog-community). Free snapshot!
+          </li>
+          <li>Reward creators and sharers/curators with Filecoin&Likecoin etc.</li>
+          <li>Users can add metadata for any content, so that it can be searched.</li>
+          <li>Help store data in Dweb(pin in IPFS, store in filecoin, etc.)</li>
+        </ol>
+        <h6>For Developers</h6>
+        <ol>
+          <li>Code: open-sourced & easy API. You can add metadata via API.</li>
+          <li>Dweb: design new RSS, CC, etc. protocols with better incentive mechanism.</li>
+          <li>Research: transparent and fun NLU&Ranking Algorithm. <a href="https://discord.gg/QaEwmJMDJ2">Discord: Dweb-Dev</a> </li> <!-- For now, we return only 42 results for every question. -->
+        </ol>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/axios.min.js"></script>
+  <script src="js/qrcode.min.js"></script>
+  <script src="js/app.js"></script>
+  <!-- should we use cdn? -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+</body>
+</html>
