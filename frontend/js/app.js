@@ -1,4 +1,4 @@
-API_BASE = 'http://154.204.26.102:8888';
+API_BASE = 'https://dweb-search-api.anwen.cc';
 CLIENT_ID = 'b597886a5fe361255e03';
 
 document.addEventListener("DOMContentLoaded", pagePrepare);
