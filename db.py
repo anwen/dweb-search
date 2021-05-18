@@ -142,7 +142,7 @@ async def add_share(doc, token):
                 author['wallet'] = Wallet(**wallet)
             share.authors = [author]
         share.authors = [Author(**author) for author in share.authors]
-        share.idx = await Share.objects.count() + 1
+        share.idx = await Share.objects.count() + 2  # TODO
         share = await share.save()
         share.authors = [author.to_son() for author in share.authors]
         return share
