@@ -19,9 +19,10 @@ Dweb-Search follows [semantic versioning 2.0.0](https://semver.org/).
 Some tweaks.
 
 ### Fixes and improvements
-- add example: TED. to show first version of incentive mechanism.
+- add example: TED. to show examples about incentive mechanism.
 - add uri for `#docs`
 - write some doc, and add the links to the homepage-docs.
+- fix ui for button and serarch results.
 
 ## [0.2.0](https://github.com/anwen/dweb-search/releases/tag/v0.2.0) (2021-05-18)
 Initial release.
