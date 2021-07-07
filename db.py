@@ -38,7 +38,9 @@ class Share(Document):
 
     tags = ListField(StringField(required=True, max_length=255))  # required=True
     authors = ListField(EmbeddedDocumentField(embedded_document_type=Author))
-    # create_at update_at
+    # created_at = StringField()
+    # update_at = StringField()
+
     # for filecoin
     data_cid = StringField()
     miner_ids = ListField(StringField(required=True, max_length=255))
