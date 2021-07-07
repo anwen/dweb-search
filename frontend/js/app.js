@@ -158,7 +158,7 @@ function getSearchResults(question) {
       for (var i =0; i < data.length; i++) {
         r = data[i];
 
-        // id could be ipns or ipfs
+        // id could be ipns or ipfs, sometimes, it is still http(s)
         hash = r.id.split('://')[1]
         if (r.id.startsWith('ipfs://')){
           hash = 'ipfs/'+hash
@@ -167,18 +167,15 @@ function getSearchResults(question) {
         } else {
           hash = ''
         }
+        see_also = ['See also: &nbsp;']
         if (hash!=''){
-          see_also = [
-            'See also: &nbsp;',
-            '<a href="https://ipfs.io/', hash, '" target="_blank">gateway1</a>&nbsp;',
-            '<a href="https://ipfs.fleek.co/', hash, '" target="_blank">gateway2</a>&nbsp;',
-          ]
+          see_also.push('<a href="https://ipfs.io/', hash, '" target="_blank">gateway1</a>&nbsp;');
+          see_also.push('<a href="https://ipfs.fleek.co/', hash, '" target="_blank">gateway2</a>&nbsp;');
         }
         if (r.url && r.url.startsWith('http')){
           see_also.push('<a href="', r.url, '" target="_blank">HTTP</a>&nbsp;');
         }
         see_also = see_also.join('');
-
         tags = '';
         if (r.tags.length>0) {
           tags += 'Tags: ';
