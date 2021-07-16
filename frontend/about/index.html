@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dweb Search">
+  <meta name="author" content="askender">
+  <title>About Dweb Search - A decentralized Search Engine for IPFS and Filecoin</title>
+  <link rel="canonical" href="">
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+  <link href="../css/search.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Dweb Search</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#docs">Docs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Airdrop</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/about/" tabindex="-1" >About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" tabindex="-1">Links</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" tabindex="-1">Knowledge Graph</a>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="bg-light p-5 rounded">
+      <h1 class="text-center">Dweb Search</h1>
+      <div class="lead col-md-8 m-auto text-center">
+        <p>A decentralized Search Engine for IPFS and Filecoin.</p>
+        <!-- <p>数据、接口、算法全开放的去中心化搜索引擎.</p> -->
+      </div>
+
+      <div id="docs" class="lead col-md-8 m-auto">
+        <h6>Features</h6>
+        <ol>
+          <li>The data, API, algorithm is all open and free.</li>
+          <li>Free snapshot is in <a href="https://jsonlines.org/">jsonl</a> format. You can download it via <a href="ipfs://QmaNZCUbQNP9MRmd5NFhcMRqVrktMJwxcTfByPzBfMeNSR">IPFS</a> or <a href="ipns://k51qzi5uqu5di151fkn8ohw1815ujsvsgs0ofeog9ou3gn9neam5ki6zatiy5d">IPNS</a>. And recreate a new search engine by running our <a href="https://github.com/anwen/dweb-search/">open-source</a> code.</li>
+          <li>We are keeping indexing all kinds of contents which support dweb in different way. Such as:</li>
+          <ul>
+            <li>Sites with Creative Commons: Wikipedia, Kaggle datasets, TED, Arxiv, Stackexchange, Youtube, Flicker ...</li>
+            <li>Sites using IPFS/IPNS: blogs, Matters(an ipfs-blog-community),</li>
+            <li>Sites with API/RSS/jsonfeed: lots of blogs, hackernews...</li>
+            <li>contents in IPFS (using a crawler), and Filecoin (slingshot datasets...)</li>
+          </ul>
+          <li>Users can also add metadata for their content, so that it can be searched.</li>
+          <li><a href="https://github.com/anwen/dweb-search/wiki/Reward-creators-and-curators">We&users also reward creators and curators</a> with tokens(Filecoin,BTC,ETH,Likecoin...).  If you are a creator, you can get Airdrops</li>
+          <li>... more ...</li>
+          <li>Help store data in Dweb(pin in IPFS, store in filecoin, etc.)</li>
+          <li>Dweb Research&Design: design new RSS, CC etc. <a href="https://github.com/anwen/dweb-search/wiki/protocols">protocols</a> with better incentive mechanism. <a href="https://discord.gg/QaEwmJMDJ2">Discord: Dweb-Dev</a> </li></li>
+          <li>Creators Community: a community of all kinds of creators(bloggers, vloggers, podcasters ... ), Enjoy dweb together<a href="https://discord.gg/QaEwmJMDJ2">Discord: Creators Community</a> </li></li>
+        </ol>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="../js/bootstrap.bundle.min.js"></script>
+  <!-- should we use cdn? -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
+</body>
+</html>
