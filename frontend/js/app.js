@@ -208,6 +208,10 @@ function getSearchResults(question) {
           case 'CC-BY-NC-ND':
             license = 'License: <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC-BY-NC-ND 4.0</a>';
             break;
+          default:
+            if (r.license) {
+              license = r.license // TODO
+            }
         }
         license += '&nbsp;';
 
@@ -236,8 +240,10 @@ function getSearchResults(question) {
         }
         // dataset_filecoin_info
         dataset_info = '';
-        if (r.data_cid!=null && r.data_cid!="") {
+        if (r.filetype!=null && r.filetype!="html") {
           dataset_info += ' Filetype: ' + r.filetype;
+        }
+        if (r.data_cid!=null && r.data_cid!="") {
           dataset_info += ' dataCid: ' + r.data_cid;
           dataset_info += ' MinerIDs: ' + r.miner_ids.join(', ');
           dataset_info = '<p>' + dataset_info + '</p>';
@@ -249,7 +255,6 @@ function getSearchResults(question) {
           '<p><a href="', r.id, '" target="_blank">', r.id, '</a></p>',
           '<p>', r.summary, '</p>',
           '<span>', see_also, tags, license, authors, '</span>',
-          '</p>',
           dataset_info,
           '</div>'
         ];
