@@ -249,7 +249,6 @@ function getSearchResults(question) {
           dataset_info = '<p>' + dataset_info + '</p>';
           dataset_info += '<p>download via: <code>lotus client retrieve --miner=minerid dataCid filename.filetype</code></p>';
         }
-
         arr = ['<div class="webResult">',
           '<h2><a href="', r.id, '" target="_blank">', r.title, '</a></h2>',
           '<p><a href="', r.id, '" target="_blank">', r.id, '</a></p>',
