@@ -73,6 +73,11 @@ class GithubAuth(Document):
     twitter_username = StringField()
 
 
+class Meta(Document):
+
+    path = StringField(required=True)
+
+
 async def fetch_user(token):
     headers = {}
     headers['Authorization'] = 'token {}'.format(token)
@@ -148,6 +153,19 @@ async def add_share(doc, token):
         share = await share.save()
         share.authors = [author.to_son() for author in share.authors]
         return share
+    except motorengine.errors.InvalidDocumentError as e:
+        logging.error(e)
+        return e
+
+
+async def add_meta(path):
+
+    try:
+        doc = {}
+        doc['path'] = path
+        meta = Meta(**doc)
+        meta = await meta.save()
+        return meta
     except motorengine.errors.InvalidDocumentError as e:
         logging.error(e)
         return e

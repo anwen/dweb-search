@@ -77,6 +77,21 @@ class ShareHandler(JsonHandler):
         self.write(ret)
 
 
+class AddMetaHandler(JsonHandler):
+    async def post(self):
+        path = self.get_argument("path", '')
+        if path:
+            meta = await db.add_meta(path)
+        if hasattr(meta, '_values'):
+            ret = {'data': meta._values}
+        else:
+            ret = {'error': str(meta)}
+        self.write(ret)
+
+    async def get(self):
+        return self.post()
+
+
 class SearchHandler(JsonHandler):
     async def get(self):
         question = self.get_argument("question", '')
@@ -107,6 +122,7 @@ def make_app():
         (r"/share", ShareHandler),
         (r"/shares", SharesHandler),
         (r"/search", SearchHandler),
+        (r"/add_meta", AddMetaHandler),
     ])
 
 
