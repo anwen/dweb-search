@@ -89,7 +89,7 @@ class AddMetaHandler(JsonHandler):
         self.write(ret)
 
     async def get(self):
-        return self.post()
+        return await self.post()
 
 
 class SearchHandler(JsonHandler):
