@@ -184,7 +184,7 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
 async def get_meta(eth):
 
     l_shares = []
-    shares = await Meta.objects.filter(eth=eth).order_by('_id').find_all()
+    shares = await Meta.objects.filter(eth=eth).find_all()
     for share in shares:
         l_shares.append(share._values)
     return l_shares
