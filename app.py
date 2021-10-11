@@ -107,11 +107,8 @@ class GetMetaHandler(JsonHandler):
         if not eth:
             self.write({'error': 'no path'})
             return
-        meta = await db.get_meta(eth)
-        if hasattr(meta, '_values'):
-            ret = {'data': meta._values}
-        else:
-            ret = {'error': str(meta)}
+        docs = await db.get_meta(eth)
+        ret = {'data': docs}
         self.write(ret)
 
 
