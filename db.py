@@ -76,6 +76,11 @@ class GithubAuth(Document):
 class Meta(Document):
 
     path = StringField(required=True)
+    eth = StringField(required=True)
+    name = StringField(required=True)
+    image = StringField(required=True)
+    tags = ListField(StringField(required=True, max_length=255))  # required=True
+    authors = StringField(required=True)
 
 
 async def fetch_user(token):
@@ -158,11 +163,16 @@ async def add_share(doc, token):
         return e
 
 
-async def add_meta(path):
+async def add_meta(path, eth='', name='', image='', tags='', authors=''):
 
     try:
         doc = {}
         doc['path'] = path
+        doc['eth'] = eth
+        doc['name'] = name
+        doc['image'] = image
+        doc['tags'] = tags
+        doc['authors'] = authors
         meta = Meta(**doc)
         meta = await meta.save()
         return meta

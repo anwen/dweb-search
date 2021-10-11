@@ -80,8 +80,15 @@ class ShareHandler(JsonHandler):
 class AddMetaHandler(JsonHandler):
     async def post(self):
         path = self.get_argument("path", '')
+        eth = self.get_argument("eth", '')
+        name = self.get_argument("name", '')
+        image = self.get_argument("image", '')
+        tags = self.get_argument("tags", '')
+        authors = self.get_argument("authors", '')
+
         if path:
-            meta = await db.add_meta(path)
+            tags = tags.strip().split()
+            meta = await db.add_meta(path, eth, name, image, tags, authors)
         if hasattr(meta, '_values'):
             ret = {'data': meta._values}
         else:
