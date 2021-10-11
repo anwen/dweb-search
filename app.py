@@ -86,9 +86,11 @@ class AddMetaHandler(JsonHandler):
         tags = self.get_argument("tags", '')
         authors = self.get_argument("authors", '')
 
-        if path:
-            tags = tags.strip().split()
-            meta = await db.add_meta(path, eth, name, image, tags, authors)
+        if not path:
+            self.write({'error': 'no path'})
+            return
+        tags = tags.strip().split()
+        meta = await db.add_meta(path, eth, name, image, tags, authors)
         if hasattr(meta, '_values'):
             ret = {'data': meta._values}
         else:
@@ -97,6 +99,20 @@ class AddMetaHandler(JsonHandler):
 
     async def get(self):
         return await self.post()
+
+
+class GetMetaHandler(JsonHandler):
+    async def get(self):
+        eth = self.get_argument("eth", '')
+        if not eth:
+            self.write({'error': 'no path'})
+            return
+        meta = await db.get_meta(eth)
+        if hasattr(meta, '_values'):
+            ret = {'data': meta._values}
+        else:
+            ret = {'error': str(meta)}
+        self.write(ret)
 
 
 class SearchHandler(JsonHandler):
@@ -130,6 +146,7 @@ def make_app():
         (r"/shares", SharesHandler),
         (r"/search", SearchHandler),
         (r"/add_meta", AddMetaHandler),
+        (r"/get_meta", GetMetaHandler),
     ])
 
 

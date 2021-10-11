@@ -181,18 +181,50 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
         return e
 
 
+async def get_meta(eth):
+
+    l_shares = []
+    shares = await Meta.objects.filter(eth=eth).order_by('_id').find_all()
+    for share in shares:
+        l_shares.append(share._values)
+    return l_shares
+
+
 async def search_shares(question):
-    # TODO
+    # TODO: add elasticsearch or MeiliSearch
+    # init
     l_shares = []
     l_cids = set()
     l_searched = set()
+    # search by title # x times # lower upper capitalize
+
+    l_searched.add(question)
     shares = await Share.objects.filter(title=question).order_by('idx').limit(5).find_all()
     for share in shares:
-        share.authors = [author.to_son() for author in share.authors]
-        item = share._values
         if share.id not in l_cids:
+            share.authors = [author.to_son() for author in share.authors]
+            item = share._values
             l_shares.append(item)
         l_cids.add(share.id)
+    if question.upper() not in l_searched:
+        l_searched.add(question.upper())
+        shares = await Share.objects.filter(title=question.upper()).order_by('idx').limit(5).find_all()
+        for share in shares:
+            if share.id not in l_cids:
+                share.authors = [author.to_son() for author in share.authors]
+                item = share._values
+                l_shares.append(item)
+            l_cids.add(share.id)
+    if question.capitalize() not in l_searched:
+        l_searched.add(question.capitalize())
+        shares = await Share.objects.filter(title=question.capitalize()).order_by('idx').limit(5).find_all()
+        for share in shares:
+            if share.id not in l_cids:
+                share.authors = [author.to_son() for author in share.authors]
+                item = share._values
+                l_shares.append(item)
+            l_cids.add(share.id)
+    # tags
     shares = await Share.objects.filter(tags=question.lower()).order_by('idx').limit(42).find_all()
     for share in shares:
         share.authors = [author.to_son() for author in share.authors]
@@ -200,8 +232,7 @@ async def search_shares(question):
         if share.id not in l_cids:
             l_shares.append(item)
         l_cids.add(share.id)
-    l_searched.add(question.lower())
-    # upper lower capitalize
+    # search by tags, it's slow now
     if not l_shares:
         shares = await Share.objects.filter(tags__contains=question).order_by('idx').limit(42).find_all()
         for share in shares:
