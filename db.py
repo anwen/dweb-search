@@ -74,6 +74,7 @@ class GithubAuth(Document):
 
 
 class Meta(Document):
+    __collection__ = "meta2"  # optional
 
     path = StringField(required=True)
     eth = StringField(required=True)
@@ -81,6 +82,7 @@ class Meta(Document):
     image = StringField(required=True)
     tags = ListField(StringField(required=True, max_length=255))  # required=True
     authors = StringField(required=True)
+    idx = IntField(required=True, unique=True)  # just for fun
 
 
 async def fetch_user(token):
@@ -154,7 +156,7 @@ async def add_share(doc, token):
                 author['wallet'] = Wallet(**wallet)
             share.authors = [author]
         share.authors = [Author(**author) for author in share.authors]
-        share.idx = await Share.objects.count() + 2  # TODO
+        share.idx = await Share.objects.count() + 1  # TODO 2
         share = await share.save()
         share.authors = [author.to_son() for author in share.authors]
         return share
@@ -173,6 +175,7 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
         doc['image'] = image
         doc['tags'] = tags
         doc['authors'] = authors
+        doc['idx'] = await Meta.objects.count() + 1
         meta = Meta(**doc)
         meta = await meta.save()
         return meta
@@ -185,7 +188,7 @@ async def get_meta(eth):
 
     l_shares = []
     if eth == 'all':
-        shares = await Meta.objects.order_by('_id').find_all()
+        shares = await Meta.objects.order_by('idx').find_all()
     else:
         shares = await Meta.objects.filter(eth=eth).find_all()
     for share in shares:
