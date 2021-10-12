@@ -1,9 +1,10 @@
 import aiohttp
 from motorengine import Document
-from motorengine import StringField, IntField, BooleanField, ListField
+from motorengine import StringField, IntField, BooleanField, ListField, FloatField
 from motorengine import EmailField, EmbeddedDocumentField
 import motorengine.errors
 import logging
+import time
 _OAUTH_USER_URL = 'https://api.github.com/user'
 
 
@@ -83,6 +84,7 @@ class Meta(Document):
     tags = ListField(StringField(required=True, max_length=255))  # required=True
     authors = StringField(required=True)
     idx = IntField(required=True, unique=True)  # just for fun
+    created_at = FloatField()
 
 
 async def fetch_user(token):
@@ -176,6 +178,7 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
         doc['tags'] = tags
         doc['authors'] = authors
         doc['idx'] = await Meta.objects.count() + 1
+        doc['created_at'] = time.time()
         meta = Meta(**doc)
         meta = await meta.save()
         return meta
