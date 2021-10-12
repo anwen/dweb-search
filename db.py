@@ -185,7 +185,7 @@ async def get_meta(eth):
 
     l_shares = []
     if eth == 'all':
-        shares = await Meta.objects.find_all()
+        shares = await Meta.objects.order_by('_id').find_all()
     else:
         shares = await Meta.objects.filter(eth=eth).find_all()
     for share in shares:
