@@ -190,7 +190,7 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
 async def get_meta(eth):
 
     l_shares = []
-    if eth == 'all':
+    if eth == '*':
         shares = await Meta.objects.order_by('idx').find_all()
     else:
         shares = await Meta.objects.filter(eth=eth).find_all()
