@@ -196,7 +196,7 @@ async def get_meta(eth):
         shares = await Meta.objects.filter(eth=eth).find_all()
     for share in shares:
         l_shares.append(share._values)
-    return l_shares
+    return l_shares[::-1]
 
 
 async def search_shares(question):
