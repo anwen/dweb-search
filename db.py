@@ -76,7 +76,7 @@ class GithubAuth(Document):
 
 
 class Meta(Document):
-    __collection__ = "meta3"  # optional
+    __collection__ = "meta4"  # optional
 
     path = StringField(required=True)
     eth = StringField(required=True)
