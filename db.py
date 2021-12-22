@@ -5,6 +5,7 @@ from motorengine import EmailField, EmbeddedDocumentField
 import motorengine.errors
 import logging
 import time
+from cid import make_cid
 _OAUTH_USER_URL = 'https://api.github.com/user'
 
 
@@ -174,6 +175,12 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
         doc['path'] = path
         doc['eth'] = eth
         doc['name'] = name
+        if 'ipfs.infura.io' in image:
+            id0 = image.replace('https://ipfs.infura.io/ipfs/','')
+            cid = make_cid(id0)
+            id1 = cid.to_v1().encode('base32').decode()
+            image = 'https://{}.ipfs.infura-ipfs.io/'.format(id1)
+
         doc['image'] = image
         doc['tags'] = tags
         doc['authors'] = authors
