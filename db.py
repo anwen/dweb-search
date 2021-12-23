@@ -172,7 +172,6 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
 
     try:
         doc = {}
-        doc['path'] = path
         doc['eth'] = eth
         doc['name'] = name
         if 'ipfs.infura.io' in image:
@@ -180,7 +179,11 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
             cid = make_cid(id0)
             id1 = cid.to_v1().encode('base32').decode()
             image = 'https://{}.ipfs.infura-ipfs.io/'.format(id1)
-
+        if path.startswith('Qm'):
+            cid = make_cid(path)
+            id1 = cid.to_v1().encode('base32').decode()
+            path = 'https://{}.ipfs.infura-ipfs.io/'.format(id1)
+        doc['path'] = path
         doc['image'] = image
         doc['tags'] = tags
         doc['authors'] = authors
@@ -192,7 +195,6 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
     except motorengine.errors.InvalidDocumentError as e:
         logging.error(e)
         return e
-
 
 async def get_meta(eth):
 
