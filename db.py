@@ -181,8 +181,7 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
             image = 'https://{}.ipfs.infura-ipfs.io/'.format(id1)
         if path.startswith('Qm'):
             cid = make_cid(path)
-            id1 = cid.to_v1().encode('base32').decode()
-            path = 'https://{}.ipfs.infura-ipfs.io/'.format(id1)
+            path = cid.to_v1().encode('base32').decode()
         doc['path'] = path
         doc['image'] = image
         doc['tags'] = tags
