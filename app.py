@@ -99,7 +99,7 @@ class AddMetaHandler(JsonHandler):
             return
         tags = tags.strip().split()
         meta = await db.add_meta(path, eth, name, image, tags, authors)
-        print(meta)
+        print(dir(meta))
         if hasattr(meta, '_values') and meta._values:
             ret = {'data': meta._values}
         else:
@@ -144,6 +144,11 @@ class SharesHandler(JsonHandler):
         ret = {'data': l_shares}
         self.write(ret)
 
+class VersionHandler(JsonHandler):
+    async def get(self):
+        ret = {'version': 'v0.2.1'}
+        self.write(ret)
+
 
 def make_app():
     return tornado.web.Application([
@@ -153,6 +158,7 @@ def make_app():
         (r"/search", SearchHandler),
         (r"/add_meta", AddMetaHandler),
         (r"/get_meta", GetMetaHandler),
+        (r"/version", VersionHandler),
     ])
 
 
