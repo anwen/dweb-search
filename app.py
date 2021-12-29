@@ -86,6 +86,7 @@ class AddMetaHandler(JsonHandler):
         tags = self.get_argument("tags", '')
         authors = self.get_argument("authors", '')
         if not path:
+            logger.info(self.request.body)
             d = json.loads(self.request.body.decode('u8'))
             path = d.get('path')
             eth = d.get('eth')
