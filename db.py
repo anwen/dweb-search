@@ -192,6 +192,7 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
         meta = await meta.save()
         return meta
     except motorengine.errors.InvalidDocumentError as e:
+        print(e)
         logging.error(e)
         return e
 

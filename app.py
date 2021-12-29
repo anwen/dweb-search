@@ -85,13 +85,21 @@ class AddMetaHandler(JsonHandler):
         image = self.get_argument("image", '')
         tags = self.get_argument("tags", '')
         authors = self.get_argument("authors", '')
-
+        if not path:
+            d = json.loads(self.request.body.decode('u8'))
+            path = d.get('path')
+            eth = d.get('eth')
+            name = d.get('name')
+            image = d.get('image')
+            tags = d.get('tags')
+            authors = d.get('authors')
         if not path:
             self.write({'error': 'no path'})
             return
         tags = tags.strip().split()
         meta = await db.add_meta(path, eth, name, image, tags, authors)
-        if hasattr(meta, '_values'):
+        print(meta)
+        if hasattr(meta, '_values') and meta._values:
             ret = {'data': meta._values}
         else:
             ret = {'error': str(meta)}
