@@ -95,7 +95,7 @@ class AddMetaHandler(JsonHandler):
             tags = d.get('tags')
             authors = d.get('authors')
         if not path:
-            self.write({'error': 'no path'})
+            self.write({'error': 'server got no data'})
             return
         tags = tags.strip().split()
         meta = await db.add_meta(path, eth, name, image, tags, authors)
