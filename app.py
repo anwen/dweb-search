@@ -14,6 +14,7 @@ import db
 import options
 from log import logger
 import argparse
+from version import BackendVersion
 
 parser = argparse.ArgumentParser(
     description='Welcome to Dweb World')
@@ -146,7 +147,7 @@ class SharesHandler(JsonHandler):
 
 class VersionHandler(JsonHandler):
     async def get(self):
-        ret = {'version': 'v0.2.1'}
+        ret = {'version': BackendVersion}
         self.write(ret)
 
 
