@@ -234,6 +234,7 @@ async def edit_meta(previous_path, path, eth='', name='', image='', tags='', aut
             try:
                 ameta = metas[0]
                 _id = ameta._id
+                doc['idx'] = ameta.idx
                 meta = Meta(_id=_id, **doc)
                 meta = await meta.save(upsert=True)
                 

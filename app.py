@@ -131,7 +131,7 @@ class EditMetaHandler(JsonHandler):
             image = d.get('image')
             tags = d.get('tags')
             authors = d.get('authors')
-        if not path:
+        if not path or not previous_path:
             self.write({'error': 'server got no data'})
             return
         tags = tags.strip().split()
