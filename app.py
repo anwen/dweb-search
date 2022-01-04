@@ -111,6 +111,42 @@ class AddMetaHandler(JsonHandler):
         return await self.post()
 
 
+
+class EditMetaHandler(JsonHandler):
+    async def post(self):
+        previous_path = self.get_argument("previous_path", '')
+        path = self.get_argument("path", '')
+        eth = self.get_argument("eth", '')
+        name = self.get_argument("name", '')
+        image = self.get_argument("image", '')
+        tags = self.get_argument("tags", '')
+        authors = self.get_argument("authors", '')
+        if not path:
+            logger.info(self.request.body)
+            d = json.loads(self.request.body.decode('u8'))
+            previous_path = d.get('previous_path')
+            path = d.get('path')
+            eth = d.get('eth')
+            name = d.get('name')
+            image = d.get('image')
+            tags = d.get('tags')
+            authors = d.get('authors')
+        if not path:
+            self.write({'error': 'server got no data'})
+            return
+        tags = tags.strip().split()
+        meta = await db.edit_meta(previous_path, path, eth, name, image, tags, authors)
+        print(dir(meta))
+        if hasattr(meta, '_values') and meta._values:
+            ret = {'data': meta._values}
+        else:
+            ret = {'error': str(meta)}
+        self.write(ret)
+
+    async def get(self):
+        return await self.post()
+
+
 class GetMetaHandler(JsonHandler):
     async def get(self):
         eth = self.get_argument("eth", '')
@@ -158,6 +194,7 @@ def make_app():
         (r"/shares", SharesHandler),
         (r"/search", SearchHandler),
         (r"/add_meta", AddMetaHandler),
+        (r"/edit_meta", EditMetaHandler),
         (r"/get_meta", GetMetaHandler),
         (r"/version", VersionHandler),
     ])

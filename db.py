@@ -87,6 +87,12 @@ class Meta(Document):
     idx = IntField(required=True, unique=True)  # just for fun
     created_at = FloatField()
 
+class Metaversion(Document):
+    __collection__ = "metaversion4"  # optional
+
+    mid = StringField(required=True) # mongo_id
+    cidnew = StringField(required=True)
+    cidold = StringField(required=True) # verbose
 
 async def fetch_user(token):
     headers = {}
@@ -196,13 +202,68 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
         logging.error(e)
         return e
 
+
+
+async def edit_meta(previous_path, path, eth='', name='', image='', tags='', authors=''):
+
+    try:
+
+        if 'ipfs.infura.io' in image:
+            id0 = image.replace('https://ipfs.infura.io/ipfs/','')
+            cid = make_cid(id0)
+            id1 = cid.to_v1().encode('base32').decode()
+            image = 'https://{}.ipfs.infura-ipfs.io/'.format(id1)
+        if path.startswith('Qm'):
+            cid = make_cid(path)
+            path = cid.to_v1().encode('base32').decode()
+        if previous_path.startswith('Qm'):
+            cid = make_cid(previous_path)
+            previous_path = cid.to_v1().encode('base32').decode()
+
+        doc = {}
+        doc['eth'] = eth
+        doc['name'] = name
+        doc['path'] = path
+        doc['image'] = image
+        doc['tags'] = tags
+        doc['authors'] = authors
+        doc['updated_at'] = time.time()
+
+        metas = await Meta.objects.filter(path=previous_path).limit(1).find_all()
+        if metas:  # should update by same publisher_id
+            try:
+                ameta = metas[0]
+                _id = ameta._id
+                meta = Meta(_id=_id, **doc)
+                meta = await meta.save(upsert=True)
+                
+                docv = {}
+                docv['mid'] = str(_id)
+                docv['cidold'] = previous_path
+                docv['cidnew'] = path
+                metav = Metaversion(**docv)
+                metav = await metav.save()
+                return meta
+            except motorengine.errors.InvalidDocumentError as e:
+                logging.error(e)
+                return e
+        else:
+            return 'no doc'
+
+
+    except motorengine.errors.InvalidDocumentError as e:
+        print(e)
+        logging.error(e)
+        return e
+
+
 async def get_meta(eth):
 
     l_shares = []
     if eth == '*':
         shares = await Meta.objects.order_by('idx').find_all()
     else:
-        shares = await Meta.objects.filter(eth=eth).find_all()
+        shares = await Meta.objects.filter(eth=eth.lower()).find_all()
     for share in shares:
         l_shares.append(share._values)
     return l_shares[::-1]
