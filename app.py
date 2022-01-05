@@ -119,7 +119,7 @@ class EditMetaHandler(JsonHandler):
         if 'Authorization' not in self.request.headers:
             authed = False
         else:
-            token = self.request.headers['Authorization'].split()[-1]
+            token = self.request.headers['Authorization'].split()[-1][2:]
             address = self.request.headers['Address']
             _address = recover_address(token)
             logger.warn('no Authorization, wrong sig')
@@ -127,8 +127,8 @@ class EditMetaHandler(JsonHandler):
                 authed = False
         if not authed:
             logger.warn('no Authorization')
-            # self.write({'error': 'no Authorization'})
-            # return
+            self.write({'error': 'no Authorization'})
+            return
         previous_path = self.get_argument("previous_path", '')
         path = self.get_argument("path", '')
         eth = self.get_argument("eth", '')
