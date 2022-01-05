@@ -137,7 +137,6 @@ class EditMetaHandler(JsonHandler):
         tags = self.get_argument("tags", '')
         authors = self.get_argument("authors", '')
         if not path:
-            logger.info(self.request.body)
             d = json.loads(self.request.body.decode('u8'))
             previous_path = d.get('previous_path')
             path = d.get('path')
@@ -151,7 +150,6 @@ class EditMetaHandler(JsonHandler):
             return
         tags = tags.strip().split()
         meta = await db.edit_meta(previous_path, path, eth, name, image, tags, authors)
-        print(dir(meta))
         if hasattr(meta, '_values') and meta._values:
             ret = {'data': meta._values}
         else:
