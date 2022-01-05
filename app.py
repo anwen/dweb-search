@@ -116,7 +116,7 @@ class AddMetaHandler(JsonHandler):
 class EditMetaHandler(JsonHandler):
     async def post(self):
         authed = True
-        if 'Authorization' not in self.request.headers
+        if 'Authorization' not in self.request.headers:
             authed = False
         else:
             token = self.request.headers['Authorization'].split()[-1]
