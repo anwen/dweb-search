@@ -15,6 +15,7 @@ import options
 from log import logger
 import argparse
 from version import BackendVersion
+from sig import recover_address
 
 parser = argparse.ArgumentParser(
     description='Welcome to Dweb World')
@@ -114,6 +115,20 @@ class AddMetaHandler(JsonHandler):
 
 class EditMetaHandler(JsonHandler):
     async def post(self):
+        authed = True
+        if 'Authorization' not in self.request.headers
+            authed = False
+        else:
+            token = self.request.headers['Authorization'].split()[-1]
+            address = self.request.headers['Address']
+            _address = recover_address(token)
+            logger.warn('no Authorization, wrong sig')
+            if _address != address:
+                authed = False
+        if not authed:
+            logger.warn('no Authorization')
+            # self.write({'error': 'no Authorization'})
+            # return
         previous_path = self.get_argument("previous_path", '')
         path = self.get_argument("path", '')
         eth = self.get_argument("eth", '')
