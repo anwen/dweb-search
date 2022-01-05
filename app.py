@@ -81,6 +81,20 @@ class ShareHandler(JsonHandler):
 
 class AddMetaHandler(JsonHandler):
     async def post(self):
+        authed = True
+        if 'authorization' not in self.request.headers:
+            authed = False
+        else:
+            token = self.request.headers['authorization'].split()[-1][2:]
+            address = self.request.headers['address']
+            _address = recover_address(token)
+            logger.warning('no Authorization, wrong sig {} {}'.format(_address, address))
+            if _address.lower() != address.lower():
+                authed = False
+        if not authed:
+            logger.warning('no Authorization')
+            # self.write({'error': 'no Authorization'})
+            # return
         path = self.get_argument("path", '')
         eth = self.get_argument("eth", '')
         name = self.get_argument("name", '')
