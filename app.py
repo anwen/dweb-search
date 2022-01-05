@@ -123,7 +123,7 @@ class EditMetaHandler(JsonHandler):
             address = self.request.headers['address']
             _address = recover_address(token)
             logger.warning('no Authorization, wrong sig {} {}'.format(_address, address))
-            if _address != address:
+            if _address.lower() != address.lower():
                 authed = False
         if not authed:
             logger.warning('no Authorization')
