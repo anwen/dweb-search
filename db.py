@@ -258,15 +258,20 @@ async def edit_meta(previous_path, path, eth='', name='', image='', tags='', aut
         return e
 
 
-async def get_meta(eth):
+async def get_meta(eth=None, tag=None):
 
     l_shares = []
-    if eth == '*':
-        shares = await Meta.objects.order_by('idx').find_all()
-    else:
-        shares = await Meta.objects.filter(eth=eth.lower()).find_all()
-    for share in shares:
-        l_shares.append(share._values)
+    if eth:
+        if eth == '*':
+            shares = await Meta.objects.order_by('idx').find_all()
+        else:
+            shares = await Meta.objects.filter(eth=eth.lower()).find_all()
+    else if tag:
+        # shares = await Meta.objects.filter(eth=eth.lower()).find_all()
+        shares = await Meta.objects.filter(tags=tag.lower()).find_all()
+    if shares:
+        for share in shares:
+            l_shares.append(share._values)
     return l_shares[::-1]
 
 

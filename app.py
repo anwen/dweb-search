@@ -177,10 +177,11 @@ class EditMetaHandler(JsonHandler):
 class GetMetaHandler(JsonHandler):
     async def get(self):
         eth = self.get_argument("eth", '')
-        if not eth:
+        tag = self.get_argument("tag", '')
+        if not eth and not tag:
             self.write({'error': 'no path'})
             return
-        docs = await db.get_meta(eth)
+        docs = await db.get_meta(eth, tag)
         ret = {'data': docs}
         self.write(ret)
 
