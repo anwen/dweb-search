@@ -266,7 +266,7 @@ async def get_meta(eth=None, tag=None):
             shares = await Meta.objects.order_by('idx').find_all()
         else:
             shares = await Meta.objects.filter(eth=eth.lower()).find_all()
-    else if tag:
+    elif tag:
         # shares = await Meta.objects.filter(eth=eth.lower()).find_all()
         shares = await Meta.objects.filter(tags=tag.lower()).find_all()
     if shares:
