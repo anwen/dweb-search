@@ -180,7 +180,7 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
         doc = {}
         doc['eth'] = eth
         doc['name'] = name
-        if 'ipfs.infura.io' in image:
+        if 'https://ipfs.infura.io' in image: # v1
             id0 = image.replace('https://ipfs.infura.io/ipfs/','')
             cid = make_cid(id0)
             id1 = cid.to_v1().encode('base32').decode()
@@ -207,8 +207,7 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
 async def edit_meta(previous_path, path, eth='', name='', image='', tags='', authors=''):
 
     try:
-
-        if 'ipfs.infura.io' in image:
+        if 'https://ipfs.infura.io' in image:
             id0 = image.replace('https://ipfs.infura.io/ipfs/','')
             cid = make_cid(id0)
             id1 = cid.to_v1().encode('base32').decode()
