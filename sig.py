@@ -26,6 +26,10 @@ data = {
 
 
 def recover_address(signature):
-    signer_address = recover_typed_data(data, *signature_to_v_r_s(bytes.fromhex(signature)))
-    # print(signer_address)
+    try:
+        signer_address = recover_typed_data(data, *signature_to_v_r_s(bytes.fromhex(signature)))
+    except Exception as e:
+        print(signature)
+        print(e)
+        return ''
     return signer_address
