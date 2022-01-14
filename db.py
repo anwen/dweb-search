@@ -174,7 +174,7 @@ async def add_share(doc, token):
         return e
 
 
-async def add_meta(path, eth='', name='', image='', tags='', authors=''):
+async def add_meta(path, eth, name, image, tags, authors):
 
     try:
         doc = {}
@@ -204,7 +204,7 @@ async def add_meta(path, eth='', name='', image='', tags='', authors=''):
 
 
 
-async def edit_meta(previous_path, path, eth='', name='', image='', tags='', authors=''):
+async def edit_meta(previous_path, path, eth, name, image, tags, authors):
 
     try:
         if 'https://ipfs.infura.io' in image:
